@@ -60,7 +60,7 @@ namespace RVP
 
         void Update() {
             if (vp) {
-                speedText.text = (vp.velMag * 2.23694f).ToString("0") + " MPH";
+                speedText.text = ((vp.velMag * 2.23694f)*1.6093).ToString("0") + " KPH";
 
                 if (trans) {
                     if (gearbox) {
@@ -74,7 +74,7 @@ namespace RVP
                 if (engine) {
                     rpmMeter.value = engine.targetPitch;
 
-                    if (engine.maxBoost > 0) {
+                    if (engine.maxBoost > 0 && boostMeter != null) {
                         boostMeter.value = engine.boost / engine.maxBoost;
                     }
                 }

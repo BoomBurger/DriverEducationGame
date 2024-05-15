@@ -192,7 +192,7 @@ namespace RVP
         void FixedUpdate() {
             if (inputInherit) {
                 InheritInput();
-            }
+            }   
 
             if (wheelLoopDone && wheelGroups.Length > 0) {
                 wheelLoopDone = false;
