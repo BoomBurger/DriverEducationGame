@@ -28,8 +28,15 @@ namespace RVP
         float stuntEndTime = -1;
         PropertyToggleSetter propertySetter;
 
+        public GameObject indicatorLeftUI;
+        public GameObject indicatorRightUI;
+        public Text scoreText1;
+
+        public GameManager gameManager;
+
         private void Start() {
             Initialize(targetVehicle);
+            
         }
 
         public void Initialize(GameObject newVehicle) {
@@ -95,7 +102,16 @@ namespace RVP
                 if (propertySetter) {
                     propertySetterText.text = propertySetter.currentPreset == 0 ? "Normal Steering" : (propertySetter.currentPreset == 1 ? "Skid Steering" : "Crab Steering");
                 }
+
+                indicatorLeftUI.SetActive(vp.indicatorLeft);
+                indicatorRightUI.SetActive(vp.indicatorRight);
+
             }
+
+            int scr = gameManager.playerScore;
+
+            scoreText1.text = scr.ToString();
+
         }
     }
 }

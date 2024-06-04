@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using JetBrains.Annotations;
 
 namespace RVP
 {
@@ -117,6 +118,7 @@ namespace RVP
 
         public bool canCrash = true;
         public AudioSource crashSnd;
+        public AudioSource indicatorSnd;
         public AudioClip[] crashClips;
         [System.NonSerialized]
         public bool playCrashSounds = true;
@@ -129,6 +131,13 @@ namespace RVP
         public float cameraDistanceChange;
         public float cameraHeightChange;
         public float cameraXOffsetChange;
+
+        public bool indicatorLeft;
+        public bool indicatorRight;
+        public double playerSpeed;
+
+        private int carLane = -1;
+        private string driverSide;
 
         void Start() {
             tr = transform;
@@ -187,9 +196,54 @@ namespace RVP
             // Debug.DrawRay(norm.position, norm.forward, Color.blue);
             // Debug.DrawRay(norm.position, norm.up, Color.green);
             // Debug.DrawRay(norm.position, norm.right, Color.red);
+
+
+            if (Input.GetKeyDown(KeyCode.M) && indicatorLeft == false && indicatorRight == false)
+            {
+                indicatorRight = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.M) && indicatorLeft == true && indicatorRight == false)
+            {
+                indicatorRight = true;
+                indicatorLeft = false;
+
+            }
+            else if (Input.GetKeyDown(KeyCode.M) && indicatorLeft == false && indicatorRight == true)
+            {
+                indicatorRight = false;
+
+            }
+
+            if (Input.GetKeyDown(KeyCode.N) && indicatorLeft == false && indicatorRight == false)
+            {
+                indicatorLeft = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.N) && indicatorLeft == true && indicatorRight == false)
+            {
+                indicatorLeft = false;
+
+            }
+            else if (Input.GetKeyDown(KeyCode.N) && indicatorLeft == false && indicatorRight == true)
+            {
+                indicatorRight = false;
+                indicatorLeft = true;
+            }
+
+            if ((indicatorLeft || indicatorRight) && !indicatorSnd.isPlaying)
+            {
+                indicatorSnd.Play();
+            }
+            else if (!indicatorLeft && !indicatorRight)
+            {
+                indicatorSnd.Stop();
+            }
         }
 
         void FixedUpdate() {
+
+            playerSpeed = (velMag * 2.23694f) * 1.6093;
+
+
             if (inputInherit) {
                 InheritInput();
             }   
@@ -239,6 +293,22 @@ namespace RVP
             }
             else if (localVelocity.z >= 0 || burnout > 0) {
                 reversing = false;
+            }
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (other.tag == "Node")
+            {
+                Debug.Log("testing");
+                TrafficSystemNode tsn = other.GetComponent<TrafficSystemNode>();
+
+                if (carLane != -1 && carLane != tsn.m_lane&& !indicatorLeft && !indicatorRight)
+                {
+                    GameObject.Find("GameManager").GetComponent<GameManager>().LowerScore(100);
+                }
+
+                carLane = tsn.m_lane;
             }
         }
 

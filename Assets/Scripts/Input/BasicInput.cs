@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-
+using UnityEngine.InputSystem;
 namespace RVP
 {
     [RequireComponent(typeof(VehicleParent))]
@@ -10,6 +10,8 @@ namespace RVP
     // Class for setting the input with the input manager
     public class BasicInput : MonoBehaviour
     {
+        public bool usingSteeringWheel;
+
         VehicleParent vp;
         public string accelAxis;
         public string brakeAxis;
@@ -21,9 +23,11 @@ namespace RVP
         public string pitchAxis;
         public string yawAxis;
         public string rollAxis;
-
+        
         void Start() {
             vp = GetComponent<VehicleParent>();
+
+
         }
 
         void Update() {
@@ -39,6 +43,7 @@ namespace RVP
                     vp.PressDownshift();
                 }
             }
+
         }
 
         void FixedUpdate() {
@@ -51,7 +56,12 @@ namespace RVP
                 vp.SetBrake(Input.GetAxis(brakeAxis));
             }
 
-            if (!string.IsNullOrEmpty(steerAxis)) {
+            if (!string.IsNullOrEmpty(steerAxis)&&!usingSteeringWheel) {
+                vp.SetSteer(Input.GetAxis(steerAxis));
+                //Debug.Log(Input.GetAxis(steerAxis));
+            }
+            else if(!string.IsNullOrEmpty(steerAxis) && usingSteeringWheel)
+            {
                 vp.SetSteer(Input.GetAxis(steerAxis));
             }
 

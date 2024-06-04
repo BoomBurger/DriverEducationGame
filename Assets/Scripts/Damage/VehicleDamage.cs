@@ -123,6 +123,8 @@ namespace RVP
                     if (tr.InverseTransformPoint(curCol.point).y > collisionIgnoreHeight && GlobalControl.damageMaskStatic == (GlobalControl.damageMaskStatic | (1 << curCol.otherCollider.gameObject.layer))) {
                         colsChecked++;
 
+                        GameObject.Find("GameManager").GetComponent<GameManager>().LowerScore(300);
+
                         // Play crash sound
                         if (vp.crashSnd && vp.crashClips.Length > 0 && !soundPlayed) {
                             vp.crashSnd.PlayOneShot(vp.crashClips[Random.Range(0, vp.crashClips.Length)], Mathf.Clamp01(col.relativeVelocity.magnitude * 0.1f));
